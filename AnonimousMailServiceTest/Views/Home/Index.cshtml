@@ -4,5 +4,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @using (Html.BeginForm("userPage", "Home", FormMethod.Get))
+    {
+    @Html.Label("Enter your name:");
+    @Html.Editor("userName");
+    <input type="submit" action="Messages" value="Enter" />
+    }
+    
 </div>

@@ -1,3 +1,5 @@
+using AnonimousMailServiceTest.Hubs;
+
 namespace AnonimousMailServiceTest
 {
     public class Program
@@ -8,6 +10,7 @@ namespace AnonimousMailServiceTest
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -29,6 +32,8 @@ namespace AnonimousMailServiceTest
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<MailHub>("/MailHub");
 
             app.Run();
         }

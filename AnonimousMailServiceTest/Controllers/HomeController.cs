@@ -18,6 +18,18 @@ namespace AnonimousMailServiceTest.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult UserPage(string userName)
+        {
+            ViewBag.UserName = userName;
+            return View();
+        }
+
+        public void Send(string name, string message)
+        {
+            // Call the addNewMessageToPage method to update clients.
+        }
+
         public IActionResult Privacy()
         {
             return View();
