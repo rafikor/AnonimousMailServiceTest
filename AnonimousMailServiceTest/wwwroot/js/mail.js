@@ -45,8 +45,22 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var recipient = document.getElementById("recipientInput").value;
     var message = document.getElementById("messageInput").value;
     var theme = document.getElementById("themeInput").value;
-    connection.invoke("SendMessage", author, recipient, theme, message).catch(function (err) {
+    /*connection.invoke("SendMessage", author, recipient, theme, message).catch(function (err) {
         return console.error(err.toString());
-    });
+    });*/
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "PostMessage", true);
+    xmlHttp.setRequestHeader("Content-Type", "multipart/form-data");
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            Author: author, Recipient: recipient, Title: theme, Body: message//,
+            //"Content-Type": "text/csv"
+        }
+    };
+    fetch("PostMessage", requestOptions);
+    /*xmlHttp.send(JSON.stringify({ message: message }));
+    console.log(xmlHttp.responseText);*/
     event.preventDefault();
 });

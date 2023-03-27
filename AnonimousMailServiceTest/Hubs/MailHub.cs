@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AnonimousMailServiceTest.Models;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -30,10 +31,9 @@ namespace AnonimousMailServiceTest.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(string author, string recipient, string theme, string message)
+        public async Task SendMessage(Message messageToSend)
         {
-            //TODO: save message to the DB
-
+            var recipient = messageToSend.Recipient;
             if (connectionsByUser.ContainsKey(recipient))
             {
                 var connectionIDsOfClient = connectionsByUser[recipient];
@@ -50,7 +50,7 @@ namespace AnonimousMailServiceTest.Hubs
                         isNeedToUpdateListOfConnections = true;
                         continue;
                     }
-                    await Clients.Client(connectionID).SendAsync("ReceiveMessage", recipient, theme, message, time.ToString("MM/dd/yyyy HH:mm:ss"));
+                    await Clients.Client(connectionID).SendAsync("ReceiveMessage", messageToSend.Recipient, messageToSend.Title, messageToSend.Body, messageToSend.TimeSent.ToString("MM/dd/yyyy HH:mm:ss"));
                 }
                 if (isNeedToUpdateListOfConnections)
                 {

@@ -1,5 +1,7 @@
-﻿using AnonimousMailServiceTest.Models;
+﻿using AnonimousMailServiceTest.Data;
+using AnonimousMailServiceTest.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace AnonimousMailServiceTest.Controllers
@@ -7,10 +9,12 @@ namespace AnonimousMailServiceTest.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AnonimousMailServiceTestContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(AnonimousMailServiceTestContext context, ILogger<HomeController> logger)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -25,14 +29,33 @@ namespace AnonimousMailServiceTest.Controllers
             return View();
         }
 
-        public void Send(string name, string message)
+        // POST: api/Messages
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Message>> PostMessage([FromHeader] string Author, [FromHeader] string Recipient, [FromHeader] string Title, [FromHeader] string Body)
         {
-            // Call the addNewMessageToPage method to update clients.
+            Message message = new Message()
+            {
+                Author = Author,
+                Recipient = Recipient,
+                Title = Title,
+                Body = Body,
+                TimeSent = DateTime.UtcNow
+            };
+            if (_context.Message == null)
+            {
+                return Problem("Entity set 'AnonimousMailServiceTestContext.Message'  is null.");
+            }
+            _context.Message.Add(message);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        public IActionResult Privacy()
+        private bool MessageExists(int id)
         {
-            return View();
+            return (_context.Message?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
