@@ -64,6 +64,36 @@
 </div>
 
 
+<input id="autoComplete" type="text">
+
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/mail.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@tarekraafat/autocomplete.js@@10.2.7/dist/autoComplete.min.js"></script>
+
+<script>
+    var index = ['fsdf','trbtrbrg', 'frgfrgregr'];
+
+        var autoCompleteJS = new autoComplete({
+            placeHolder: "Search for Food...",
+            data: {
+            src: async query => { return index; },
+                cache: false,
+            },
+            resultItem: {
+                highlight: true
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection.value;
+                        autoCompleteJS.input.value = selection;
+                    }
+                }
+            }
+        });
+
+    index=['auto1','auto2'];
+    
+
+</script>
