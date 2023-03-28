@@ -21,7 +21,7 @@ connection.on("ReceiveMessages", function (messagesJson) {
             }
         });
 
-        buttonAsHeader.textContent = messages[i].TimeSent + "," + messages[i].Author + ': ' + messages[i].Title;
+        buttonAsHeader.textContent = "Sent: "+ messages[i].TimeSent + ", From: " + messages[i].Author + ', Theme: ' + messages[i].Title;
         var div = document.createElement("div");
         div.className = 'content';
 
@@ -78,7 +78,6 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     if (isError) {
         return;
     }
-
 
     const requestOptions = {
         method: 'POST',

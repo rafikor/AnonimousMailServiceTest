@@ -8,37 +8,10 @@
     }
     <script>var currentUserName = '@ViewBag.UserName'</script>
 }
-<style>
-    /* Style the button that is used to open and close the collapsible content */
-    .collapsible {
-        background-color: #eee;
-        color: #444;
-        cursor: pointer;
-        padding: 18px;
-        width: 100%;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 15px;
-    }
-
-        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-        .active, .collapsible:hover {
-            background-color: #ccc;
-        }
-
-    /* Style the collapsible content. Note: hidden by default */
-    .content {
-        padding: 0 18px;
-        /*display: none;*/
-        overflow: hidden;
-        background-color: #f1f1f1;
-    }
-</style>
 
 <div class="container">
     <div id="errors" style="color:red;"></div>
-    <div class="row p-1">
+    <div class="form-outline">
         <div class="form-group">
             <label for="input-datalist">Recipient</label>
             <input type="text" class="form-control" placeholder="Enter user name..." list="possibleUsersOptions" id="recipientInput">
@@ -46,23 +19,18 @@
             </datalist>
         </div>
     </div>
-    <div class="row p-1">
-        <div class="col-1">Theme</div>
+    <div class="form-outline">
+        <div class="form-label">Theme</div>
         <input type="text" class="form-control" placeholder="Enter theme..." id="themeInput" />
     </div>
-</div>
-<div class="form-outline">
-    <label class="form-label" for="messageInput">Message</label>
-    <textarea class="form-control" id="messageInput" rows="4" placeholder="Body of the message..."></textarea>    
-</div>
-<div class="row p-1">
-    <div class="col-6 text-end">
-        <input type="button" id="sendButton" value="Send Message" />
+    <div class="form-outline">
+        <label class="form-label" for="messageInput">Message</label>
+        <textarea class="form-control" id="messageInput" rows="4" placeholder="Body of the message..."></textarea>    
     </div>
-</div>
-<div class="row p-1">
-    <div class="col-6">
-        <hr />
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
     </div>
 </div>
 <div class="row p-1">

@@ -1,7 +1,6 @@
 ﻿using AnonimousMailServiceTest.Data;
 using AnonimousMailServiceTest.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace AnonimousMailServiceTest.Controllers

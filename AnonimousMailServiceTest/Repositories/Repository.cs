@@ -1,9 +1,7 @@
 ﻿using System.Data.SqlClient;
 using AnonimousMailServiceTest.Models;
-using System.Runtime.Intrinsics.Arm;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace AnonimousMailServiceTest
+namespace AnonimousMailServiceTest.Repositories
 {
     public class MessageRepository
     {

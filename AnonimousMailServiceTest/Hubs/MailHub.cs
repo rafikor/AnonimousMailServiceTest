@@ -1,14 +1,7 @@
 ﻿using AnonimousMailServiceTest.Models;
-using AnonimousMailServiceTest.SubscribeTableDependencies;
-using MessagePack.Resolvers;
+using AnonimousMailServiceTest.Repositories;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Protocol;
 using Newtonsoft.Json;
-using System.Configuration;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
 
 namespace AnonimousMailServiceTest.Hubs
 {
@@ -42,7 +35,7 @@ namespace AnonimousMailServiceTest.Hubs
             }
             else
             {
-                Groups.AddToGroupAsync(Context.ConnectionId, "newOnly_"+userName);
+                Groups.AddToGroupAsync(Context.ConnectionId, GetGroupOnlyNotifyNameByUserName(userName));
             }
             return resultToReturn;
         }
@@ -55,7 +48,7 @@ namespace AnonimousMailServiceTest.Hubs
             await Clients.Group(GetGroupNameByUserName(recipient)).SendAsync("ReceiveMessages", jsonToSend);
             if (isPopups)
             {
-                await Clients.Group("newOnly_" + recipient).SendAsync("ReceiveMessagesPopup", jsonToSend);
+                await Clients.Group(GetGroupOnlyNotifyNameByUserName(recipient)).SendAsync("ReceiveMessagesPopup", jsonToSend);
             }
         }
 
@@ -72,6 +65,10 @@ namespace AnonimousMailServiceTest.Hubs
         private string GetGroupNameByUserName(string userName)
         {
             return $"user_{userName}";
+        }
+        private string GetGroupOnlyNotifyNameByUserName(string userName)
+        {
+            return $"newOnly_{userName}";
         }
     }
 }
