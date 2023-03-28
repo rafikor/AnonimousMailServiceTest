@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
 using AnonimousMailServiceTest.Models;
+using System.Runtime.Intrinsics.Arm;
 
 namespace AnonimousMailServiceTest
 {
@@ -13,16 +14,16 @@ namespace AnonimousMailServiceTest
             this.connectionString = connectionString;
         }
 
-        public List<Message> GetProducts()
+        /*public List<Message> GetMessages(string userName)
         {
-            List<Message> products = new List<Message>();
-            Message product;
+            List<Message> messages = new List<Message>();
+            Message message;
 
-            var data = GetProductDetailsFromDb();
+            var data = GetMessagesFromDb(userName);
 
             foreach (DataRow row in data.Rows)
             {
-                product = new Message
+                message = new Message
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Author = row["Author"].ToString(),
@@ -31,31 +32,42 @@ namespace AnonimousMailServiceTest
                     Body = row["Body"].ToString(),
                     TimeSent = Convert.ToDateTime(row["TimeSent"]),
                 };
-                products.Add(product);
+                messages.Add(message);
             }
 
-            return products;
-        }
+            return messages;
+        }*/
 
-        private DataTable GetProductDetailsFromDb()
+        public List<Message> GetMessages(string userName)
         {
-            var query = "SELECT Id, Author, Recipient, Title, Body, TimeSent FROM Message";
-            DataTable dataTable = new DataTable();
+            var query = $"SELECT Id, Author, Recipient, Title, Body, TimeSent FROM Message WHERE Recipient ={userName} ORDER BY TimeSent";
+            List<Message> messages = new List<Message>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
-                    connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
+                        connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            dataTable.Load(reader);
+                            //Didn't use DataTable.Load(reader) due to strange "Method is not implemented" error
+                            while (reader.Read())
+                            {
+                                var message = new Message();
+                                message.Id = Convert.ToInt32(reader["Id"]);
+                                message.Author = (string)reader["Author"];
+                                message.Recipient = (string)reader["Recipient"];
+                                message.Title = (string)reader["Title"];
+                                message.Body = (string)reader["Body"];
+                                message.TimeSent = Convert.ToDateTime(reader["TimeSent"]);
+                                messages.Add(message);
+                            }
                         }
                     }
 
-                    return dataTable;
+                    return messages;
                 }
                 catch (Exception ex)
                 {
