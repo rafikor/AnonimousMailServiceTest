@@ -39,30 +39,23 @@ namespace AnonimousMailServiceTest.Controllers
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Message>> PostMessage([FromHeader] string Author, [FromHeader] string Recipient, [FromHeader] string Title, [FromHeader] string Body)
+        public async Task<ActionResult<Message>> PostMessage([FromBody] Message message)
         {
-            Message message = new Message()
-            {
-                Author = Author,
-                Recipient = Recipient,
-                Title = Title,
-                Body = Body,
-                TimeSent = DateTime.UtcNow
-            };
+            message.TimeSent= DateTime.Now;
             if (_context.Message == null)
             {
                 return Problem("Entity set 'AnonimousMailServiceTestContext.Message'  is null.");
             }
             _context.Message.Add(message);
 
-            if(_context.UserOfMailService.Where(a=>a.Name== Author).Count()==0)
+            if(_context.UserOfMailService.Where(a=>a.Name== message.Author).Count()==0)
             {
-                _context.UserOfMailService.Add(new UserOfMailService() { Name=Author });
+                _context.UserOfMailService.Add(new UserOfMailService() { Name=message.Author });
             }
 
-            if (_context.UserOfMailService.Where(a => a.Name == Recipient).Count() == 0)
+            if (_context.UserOfMailService.Where(a => a.Name == message.Recipient).Count() == 0)
             {
-                _context.UserOfMailService.Add(new UserOfMailService() { Name= Recipient});
+                _context.UserOfMailService.Add(new UserOfMailService() { Name= message.Recipient});
             }
 
             await _context.SaveChangesAsync();

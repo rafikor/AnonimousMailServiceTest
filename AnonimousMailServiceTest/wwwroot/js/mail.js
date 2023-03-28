@@ -57,18 +57,18 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var recipient = document.getElementById("recipientInput").value;
     var message = document.getElementById("messageInput").value;
     var theme = document.getElementById("themeInput").value;
-    
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("POST", "PostMessage", true);
-    xmlHttp.setRequestHeader("Content-Type", "multipart/form-data");
 
     const requestOptions = {
         method: 'POST',
+        body: JSON.stringify({ Author: author, Recipient: recipient, Title: theme, Body: message }),
+        dataType: 'json',
         headers: {
-            Author: author, Recipient: recipient, Title: theme, Body: message
-        }
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
     };
     fetch("PostMessage", requestOptions);
+
     
     event.preventDefault();
 });

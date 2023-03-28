@@ -2,8 +2,6 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    @ViewBag.UserName
-    ;
     <script>var currentUserName = '@ViewBag.UserName'</script>
 }
 <style>
@@ -49,9 +47,9 @@
         <input type="text" class="form-control" placeholder="Enter theme..." id="themeInput" />
     </div>
 </div>
-<div class="row p-1">
-    <div class="col-1">Message</div>
-    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+<div class="form-outline">
+    <label class="form-label" for="messageInput">Message</label>
+    <textarea class="form-control" id="messageInput" rows="4" placeholder="Body of the message..."></textarea>    
 </div>
 <div class="row p-1">
     <div class="col-6 text-end">
