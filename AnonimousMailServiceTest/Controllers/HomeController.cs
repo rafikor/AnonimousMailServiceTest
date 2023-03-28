@@ -29,6 +29,13 @@ namespace AnonimousMailServiceTest.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult SomePage(string userName)
+        {
+            ViewBag.UserName = userName;
+            return View();
+        }
+
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

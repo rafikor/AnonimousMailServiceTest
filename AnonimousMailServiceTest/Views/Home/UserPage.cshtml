@@ -2,7 +2,8 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    @ViewBag.UserName;
+    @ViewBag.UserName
+    ;
     <script>var currentUserName = '@ViewBag.UserName'</script>
 }
 <style>
@@ -45,27 +46,28 @@
     </div>
     <div class="row p-1">
         <div class="col-1">Theme</div>
-        <input type="text" class="form-control" placeholder="Enter theme..." id="themeInput" /></div>
+        <input type="text" class="form-control" placeholder="Enter theme..." id="themeInput" />
     </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+</div>
+<div class="row p-1">
+    <div class="col-1">Message</div>
+    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+</div>
+<div class="row p-1">
+    <div class="col-6 text-end">
+        <input type="button" id="sendButton" value="Send Message" />
     </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
+</div>
+<div class="row p-1">
+    <div class="col-6">
+        <hr />
     </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr />
-        </div>
+</div>
+<div class="row p-1">
+    <div class="col-6">
+        <ul id="messagesList"></ul>
     </div>
-        <div class="row p-1">
-        <div class="col-6">
-                <ul id="messagesList"></ul>
-            </div>
-        </div>
+</div>
 </div>
 
 <script>
