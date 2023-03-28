@@ -23,11 +23,7 @@ namespace AnonimousMailServiceTest.Hubs
         {
             var httpContext = Context.GetHttpContext();
             var userName = httpContext.Request.Query["userName"][0];
-            if(!connectionsByUser.ContainsKey(userName))
-            {
-                connectionsByUser[userName] = new List<string>();
-            }
-            connectionsByUser[userName].Add(Context.ConnectionId);
+            Groups.AddToGroupAsync(Context.ConnectionId, GetGroupNameByUserName(userName));
             List<Message> messagesToSend = productRepository.GetMessages(userName);
             var resultToReturn = base.OnConnectedAsync();
             foreach (var message in messagesToSend)
@@ -37,41 +33,15 @@ namespace AnonimousMailServiceTest.Hubs
             return resultToReturn;
         }
 
-        public override Task OnDisconnectedAsync(Exception? exception)
-        {
-            var httpContext = Context.GetHttpContext();
-            var userName = httpContext.Request.Query["userName"][0];
-            
-            connectionsByUser[userName].Remove(Context.ConnectionId);
-            return base.OnDisconnectedAsync(exception);
-        }
-
         public async Task SendMessage(Message messageToSend)
         {
             var recipient = messageToSend.Recipient;
-            if (connectionsByUser.ContainsKey(recipient))
-            {
-                var connectionIDsOfClient = connectionsByUser[recipient];
-                var time = DateTime.UtcNow;
-                var copyConnectionIDsOfClient = connectionIDsOfClient;
-                bool isNeedToUpdateListOfConnections = false;
+            await Clients.Group(GetGroupNameByUserName(recipient)).SendAsync("ReceiveMessage", messageToSend.Recipient, messageToSend.Title, messageToSend.Body, messageToSend.TimeSent.ToString("MM/dd/yyyy HH:mm:ss"));
+        }
 
-                foreach (string connectionID in connectionIDsOfClient)
-                {
-                    var recipientClient = Clients.Client(connectionID);
-                    if (recipientClient == null)
-                    {
-                        copyConnectionIDsOfClient.Remove(connectionID);
-                        isNeedToUpdateListOfConnections = true;
-                        continue;
-                    }
-                    await Clients.Client(connectionID).SendAsync("ReceiveMessage", messageToSend.Recipient, messageToSend.Title, messageToSend.Body, messageToSend.TimeSent.ToString("MM/dd/yyyy HH:mm:ss"));
-                }
-                if (isNeedToUpdateListOfConnections)
-                {
-                    connectionsByUser[recipient] = copyConnectionIDsOfClient;
-                }
-            }
+        private string GetGroupNameByUserName(string userName)
+        {
+            return $"user_{userName}";
         }
     }
 }

@@ -14,30 +14,6 @@ namespace AnonimousMailServiceTest
             this.connectionString = connectionString;
         }
 
-        /*public List<Message> GetMessages(string userName)
-        {
-            List<Message> messages = new List<Message>();
-            Message message;
-
-            var data = GetMessagesFromDb(userName);
-
-            foreach (DataRow row in data.Rows)
-            {
-                message = new Message
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Author = row["Author"].ToString(),
-                    Recipient = row["Recipient"].ToString(),
-                    Title = row["Title"].ToString(),
-                    Body = row["Body"].ToString(),
-                    TimeSent = Convert.ToDateTime(row["TimeSent"]),
-                };
-                messages.Add(message);
-            }
-
-            return messages;
-        }*/
-
         public List<Message> GetMessages(string userName)
         {
             var query = $"SELECT Id, Author, Recipient, Title, Body, TimeSent FROM Message WHERE Recipient ={userName} ORDER BY TimeSent";
