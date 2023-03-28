@@ -35,12 +35,17 @@
 
 <div class="container">
     <div class="row p-1">
-        <div class="col-1">Recipient</div>
-        <div class="col-5"><input type="text" id="recipientInput" /></div>
+        <div class="form-group">
+            <label for="input-datalist">Recipient</label>
+            <input type="text" class="form-control" placeholder="Enter user name..." list="possibleUsersOptions" id="recipientInput">
+            <datalist id="possibleUsersOptions">
+                <option>test</option>
+            </datalist>
+        </div>
     </div>
     <div class="row p-1">
         <div class="col-1">Theme</div>
-        <div class="col-5"><input type="text" id="themeInput" /></div>
+        <input type="text" class="form-control" placeholder="Enter theme..." id="themeInput" /></div>
     </div>
     <div class="row p-1">
         <div class="col-1">Message</div>
@@ -63,33 +68,13 @@
         </div>
 </div>
 
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/mail.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@@tarekraafat/autocomplete.js@@10.2.7/dist/autoComplete.min.js"></script>
 
 <script>
-    var usersToChoose = [];
-
-        var autoCompleteJS = new autoComplete({
-        selector: "#recipientInput",
-            placeHolder: "Recipient...",
-            data: {
-            src: async query => { return usersToChoose; },
-                cache: false,
-            },
-            resultItem: {
-                highlight: true
-            },
-            events: {
-                input: {
-                    selection: (event) => {
-                        const selection = event.detail.selection.value;
-                        autoCompleteJS.input.value = selection;
-                    }
-                }
-            }
-        });
-
-    
-
+    document.addEventListener('DOMContentLoaded', e => {
+        $('#recipientInput').autocomplete()
+    }, false);
 </script>
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/mail.js"></script>

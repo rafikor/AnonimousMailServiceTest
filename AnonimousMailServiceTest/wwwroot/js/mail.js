@@ -39,8 +39,12 @@ connection.on("ReceiveMessages", function (messagesJson) {
 
 connection.on("ReceivePossibleRecipients", function (usersJson) {
     var users = JSON.parse(usersJson);
+    console.log(users);
+    let possibleUsersOptions = document.getElementById("possibleUsersOptions");
     for (var i = 0; i < users.length; i++) {
-        usersToChoose.push(users[i]);
+        var option = document.createElement("option");
+        option.textContent = users[i];
+        possibleUsersOptions.appendChild(option);
     }
 });
 
