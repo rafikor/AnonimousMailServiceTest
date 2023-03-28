@@ -6,32 +6,43 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/MailHub?userName="
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
-connection.on("ReceiveMessage", function (user, title, messageBody,time) {
-    //var buttonAsHeader = document.createElement("buttonAsHeader");
-    var buttonAsHeader = document.createElement("button");
-    buttonAsHeader.className = "collapsible";
-    buttonAsHeader.addEventListener("click", function () {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = content.scrollHeight*0 + "px";
-        }
-    });
-
-    buttonAsHeader.textContent = time + "," + user + ': ' + title;
-    var div = document.createElement("div");
-    div.className = 'content';
+connection.on("ReceiveMessages", function (messagesJson) {
+    console.log(messagesJson);
+    var messages = JSON.parse(messagesJson);
+    console.log(messages);
+    console.log(messages[0].Title);
+    console.log(messages[0].TimeSent);
     
-    div.style.maxHeight = 0;
-    let body = document.createElement("p");
-    body.textContent = messageBody;
-    div.appendChild(body);
+    for (var i = 0; i < messages.length; i++) {
+        var buttonAsHeader = document.createElement("button");
+        buttonAsHeader.className = "collapsible";
+        buttonAsHeader.addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight * 0 + "px";
+            }
+        });
 
-    let messagesNode = document.getElementById("messagesList");
-    messagesNode.insertBefore(div, messagesNode.firstChild);
-    messagesNode.insertBefore(buttonAsHeader, div);
+        buttonAsHeader.textContent = messages[i].TimeSent + "," + messages[i].Author + ': ' + messages[i].Title;
+        var div = document.createElement("div");
+        div.className = 'content';
+
+        div.style.maxHeight = 0;
+        let body = document.createElement("p");
+        body.textContent = messages[i].Body;
+        div.appendChild(body);
+
+        let messagesNode = document.getElementById("messagesList");
+        messagesNode.insertBefore(div, messagesNode.firstChild);
+        messagesNode.insertBefore(buttonAsHeader, div);
+    }
+});
+
+connection.on("ReceiveUser", function (user) {
+    usersToChoose.push(user);
 });
 
 connection.start().then(function () {

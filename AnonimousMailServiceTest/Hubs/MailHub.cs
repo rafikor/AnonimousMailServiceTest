@@ -2,9 +2,11 @@
 using AnonimousMailServiceTest.SubscribeTableDependencies;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using Newtonsoft.Json;
 using System.Configuration;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 
 namespace AnonimousMailServiceTest.Hubs
 {
@@ -26,17 +28,16 @@ namespace AnonimousMailServiceTest.Hubs
             Groups.AddToGroupAsync(Context.ConnectionId, GetGroupNameByUserName(userName));
             List<Message> messagesToSend = productRepository.GetMessages(userName);
             var resultToReturn = base.OnConnectedAsync();
-            foreach (var message in messagesToSend)
-            {
-                SendMessage(message);
-            }
+            SendMessages(messagesToSend, userName);
             return resultToReturn;
         }
 
-        public async Task SendMessage(Message messageToSend)
+        public async Task SendMessages(List<Message> messagesToSend, string recipient)
         {
-            var recipient = messageToSend.Recipient;
-            await Clients.Group(GetGroupNameByUserName(recipient)).SendAsync("ReceiveMessage", messageToSend.Recipient, messageToSend.Title, messageToSend.Body, messageToSend.TimeSent.ToString("MM/dd/yyyy HH:mm:ss"));
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.DateFormatString = "MM/dd/yyyy HH:mm:ss";
+            var jsonToSend = JsonConvert.SerializeObject(messagesToSend, jsonSettings);
+            await Clients.Group(GetGroupNameByUserName(recipient)).SendAsync("ReceiveMessages", jsonToSend);
         }
 
         private string GetGroupNameByUserName(string userName)

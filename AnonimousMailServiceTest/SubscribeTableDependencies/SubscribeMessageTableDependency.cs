@@ -26,7 +26,7 @@ namespace AnonimousMailServiceTest.SubscribeTableDependencies
         {
             if (e.ChangeType != TableDependency.SqlClient.Base.Enums.ChangeType.None)
             {   
-                mailHub.SendMessage(e.Entity);
+                mailHub.SendMessages(new List<Message>() { e.Entity }, e.Entity.Recipient);
             }
         }
 
