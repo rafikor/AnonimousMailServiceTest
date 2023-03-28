@@ -6,9 +6,13 @@
     <h1 class="display-4">Welcome</h1>
     @using (Html.BeginForm("userPage", "Home", FormMethod.Get))
     {
-    @Html.Label("Enter your name:");
-    @Html.Editor("userName");
-    <input type="submit" action="Messages" value="Enter" />
+
+        <div class="align-items-center">
+            <label for="validationDefault01" class="form-label">Enter your name:</label>
+            <input type="text" class="form-control" name="userName" id="validationDefault01" value="" placeholder="Your name..." required>
+            <button class="btn btn-primary" type="submit" action="Messages">Enter</button> 
+        </div>
+    
     }
     
 </div>

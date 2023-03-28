@@ -2,6 +2,10 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    @if (@ViewBag.UserName != null)
+    {
+        <h2>Current user is @ViewBag.UserName</h2>
+    }
     <script>var currentUserName = '@ViewBag.UserName'</script>
 }
 <style>
@@ -33,12 +37,12 @@
 </style>
 
 <div class="container">
+    <div id="errors" style="color:red;"></div>
     <div class="row p-1">
         <div class="form-group">
             <label for="input-datalist">Recipient</label>
             <input type="text" class="form-control" placeholder="Enter user name..." list="possibleUsersOptions" id="recipientInput">
             <datalist id="possibleUsersOptions">
-                <option>test</option>
             </datalist>
         </div>
     </div>

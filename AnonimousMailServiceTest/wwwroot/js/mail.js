@@ -26,7 +26,8 @@ connection.on("ReceiveMessages", function (messagesJson) {
         div.className = 'content';
 
         div.style.maxHeight = 0;
-        let body = document.createElement("p");
+        let body = document.createElement("div");
+        body.style = "white-space:pre; overflow-x:auto; overflow-y:hidden";
         body.textContent = messages[i].Body;
         div.appendChild(body);
 
@@ -58,6 +59,27 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var message = document.getElementById("messageInput").value;
     var theme = document.getElementById("themeInput").value;
 
+    var templateMessage = " cannot be empty, please fill it. ";
+    document.getElementById("errors").innerHTML = "";
+
+    var isError = false;
+    if (recipient == "") {
+        document.getElementById("errors").innerHTML += "Recipient" + templateMessage;
+        isError = true;
+    }
+    if (message == "") {
+        document.getElementById("errors").innerHTML += "Body of the message" + templateMessage;
+        isError = true;
+    }
+    if (theme == "") {
+        document.getElementById("errors").innerHTML += "Theme" + templateMessage;
+        isError = true;
+    }
+    if (isError) {
+        return;
+    }
+
+
     const requestOptions = {
         method: 'POST',
         body: JSON.stringify({ Author: author, Recipient: recipient, Title: theme, Body: message }),
@@ -69,6 +91,9 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     };
     fetch("PostMessage", requestOptions);
 
+    document.getElementById("recipientInput").value="";
+    document.getElementById("messageInput").value="";
+    document.getElementById("themeInput").value = "";
     
     event.preventDefault();
 });
