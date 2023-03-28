@@ -25,6 +25,12 @@ namespace AnonimousMailServiceTest
             var app = builder.Build();
             var connectionString = app.Configuration.GetConnectionString("AnonimousMailServiceTestContext");
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AnonimousMailServiceTestContext>();
+                dbContext.Database.EnsureCreated();
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
