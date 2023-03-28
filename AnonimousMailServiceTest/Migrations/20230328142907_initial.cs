@@ -27,6 +27,19 @@ namespace AnonimousMailServiceTest.Migrations
                 {
                     table.PrimaryKey("PK_Message", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "UserOfMailService",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOfMailService", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -34,6 +47,9 @@ namespace AnonimousMailServiceTest.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Message");
+
+            migrationBuilder.DropTable(
+                name: "UserOfMailService");
         }
     }
 }

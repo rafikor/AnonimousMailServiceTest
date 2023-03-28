@@ -20,6 +20,7 @@ namespace AnonimousMailServiceTest
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<MailHub>();
             builder.Services.AddSingleton<SubscribeMessageTableDependency>();
+            builder.Services.AddSingleton<SubscribeUniqueUserTableDependency>();
 
             var app = builder.Build();
             var connectionString = app.Configuration.GetConnectionString("AnonimousMailServiceTestContext");
@@ -46,6 +47,7 @@ namespace AnonimousMailServiceTest
             app.MapHub<MailHub>("/MailHub");
 
             app.UseSqlTableDependency<SubscribeMessageTableDependency>(connectionString);
+            app.UseSqlTableDependency<SubscribeUniqueUserTableDependency>(connectionString);
             app.Run();
         }
     }

@@ -48,6 +48,16 @@ namespace AnonimousMailServiceTest.Controllers
             }
             _context.Message.Add(message);
 
+            if(_context.UserOfMailService.Where(a=>a.Name== Author).Count()==0)
+            {
+                _context.UserOfMailService.Add(new UserOfMailService() { Name=Author });
+            }
+
+            if (_context.UserOfMailService.Where(a => a.Name == Recipient).Count() == 0)
+            {
+                _context.UserOfMailService.Add(new UserOfMailService() { Name= Recipient});
+            }
+
             await _context.SaveChangesAsync();
 
             return NoContent();

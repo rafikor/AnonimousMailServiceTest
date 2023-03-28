@@ -50,7 +50,31 @@ namespace AnonimousMailServiceTest.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Message");
+                    b.ToTable("Message", t =>
+                        {
+                            t.HasTrigger("SomeTrigger");
+                        });
+                });
+
+            modelBuilder.Entity("AnonimousMailServiceTest.Models.UserOfMailService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserOfMailService", t =>
+                        {
+                            t.HasTrigger("SomeTrigger")
+                                .HasDatabaseName("SomeTrigger1");
+                        });
                 });
 #pragma warning restore 612, 618
         }

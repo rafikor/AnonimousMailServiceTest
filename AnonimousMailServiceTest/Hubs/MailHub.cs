@@ -1,9 +1,11 @@
 ﻿using AnonimousMailServiceTest.Models;
 using AnonimousMailServiceTest.SubscribeTableDependencies;
+using MessagePack.Resolvers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Newtonsoft.Json;
 using System.Configuration;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -13,12 +15,14 @@ namespace AnonimousMailServiceTest.Hubs
     public class MailHub : Hub
     {
         static Dictionary<string, List<string>> connectionsByUser = new Dictionary<string, List<string>>();
-        MessageRepository productRepository;
+        MessageRepository messageRepository;
+
+        readonly static string ReceivePossibleRecipientsSignalRProcedureName = "ReceivePossibleRecipients";
 
         public MailHub(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("AnonimousMailServiceTestContext");
-            productRepository = new MessageRepository(connectionString);
+            messageRepository = new MessageRepository(connectionString);
         }
 
         public override Task OnConnectedAsync()
@@ -26,10 +30,10 @@ namespace AnonimousMailServiceTest.Hubs
             var httpContext = Context.GetHttpContext();
             var userName = httpContext.Request.Query["userName"][0];
             Groups.AddToGroupAsync(Context.ConnectionId, GetGroupNameByUserName(userName));
-            List<Message> messagesToSend = productRepository.GetMessages(userName);
+            List<Message> messagesToSend = messageRepository.GetMessages(userName);
             var resultToReturn = base.OnConnectedAsync();
             SendMessages(messagesToSend, userName);
-            List<string> distinctUsers = productRepository.GetDistinctUsers();
+            List<string> distinctUsers = messageRepository.GetDistinctUsers();
             SendPossibleRecipients(userName, distinctUsers);
             return resultToReturn;
         }
@@ -45,7 +49,12 @@ namespace AnonimousMailServiceTest.Hubs
         public async Task SendPossibleRecipients(string recipientToWhomSend, List<string> possibleRecipients)
         {
             var jsonToSend = JsonConvert.SerializeObject(possibleRecipients);
-            await Clients.Group(GetGroupNameByUserName(recipientToWhomSend)).SendAsync("ReceivePossibleRecipients", jsonToSend);
+            await Clients.Group(GetGroupNameByUserName(recipientToWhomSend)).SendAsync(ReceivePossibleRecipientsSignalRProcedureName, jsonToSend);
+        }
+        public async Task SendPossibleRecipientsToAll(List<string> possibleRecipients)
+        {
+            var jsonToSend = JsonConvert.SerializeObject(possibleRecipients);
+            await Clients.All.SendAsync(ReceivePossibleRecipientsSignalRProcedureName, jsonToSend);
         }
         private string GetGroupNameByUserName(string userName)
         {

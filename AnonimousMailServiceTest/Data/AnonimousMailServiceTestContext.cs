@@ -16,11 +16,14 @@ namespace AnonimousMailServiceTest.Data
         }
 
         public DbSet<Message> Message { get; set; } = default!;
+        public DbSet<UserOfMailService> UserOfMailService { get; set; } = default!;
 
         //https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-7.0/breaking-changes
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Message>()
+                .ToTable(tb => tb.HasTrigger("SomeTrigger"));
+            modelBuilder.Entity<UserOfMailService>()
                 .ToTable(tb => tb.HasTrigger("SomeTrigger"));
         }
     }
