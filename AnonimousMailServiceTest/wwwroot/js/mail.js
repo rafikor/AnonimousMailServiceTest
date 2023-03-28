@@ -1,7 +1,6 @@
 ﻿"use strict";
 
-
-var connection = new signalR.HubConnectionBuilder().withUrl("/MailHub?userName="+ userName ).build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/MailHub?userName=" + currentUserName).build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
@@ -39,7 +38,6 @@ connection.on("ReceiveMessages", function (messagesJson) {
 
 connection.on("ReceivePossibleRecipients", function (usersJson) {
     var users = JSON.parse(usersJson);
-    console.log(users);
     let possibleUsersOptions = document.getElementById("possibleUsersOptions");
     for (var i = 0; i < users.length; i++) {
         var option = document.createElement("option");
@@ -55,13 +53,11 @@ connection.start().then(function () {
 });
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
-    var author = userName;
+    var author = currentUserName;
     var recipient = document.getElementById("recipientInput").value;
     var message = document.getElementById("messageInput").value;
     var theme = document.getElementById("themeInput").value;
-    /*connection.invoke("SendMessage", author, recipient, theme, message).catch(function (err) {
-        return console.error(err.toString());
-    });*/
+    
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "PostMessage", true);
     xmlHttp.setRequestHeader("Content-Type", "multipart/form-data");
@@ -69,12 +65,11 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     const requestOptions = {
         method: 'POST',
         headers: {
-            Author: author, Recipient: recipient, Title: theme, Body: message//,
-            //"Content-Type": "text/csv"
+            Author: author, Recipient: recipient, Title: theme, Body: message
         }
     };
     fetch("PostMessage", requestOptions);
-    /*xmlHttp.send(JSON.stringify({ message: message }));
-    console.log(xmlHttp.responseText);*/
+    
     event.preventDefault();
 });
+

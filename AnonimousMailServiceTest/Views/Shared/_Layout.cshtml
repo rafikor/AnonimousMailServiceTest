@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AnonimousMailServiceTest.styles.css" asp-append-version="true" />
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
 </head>
 <body>
     <header>
@@ -43,7 +45,46 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <script src="~/lib/pnotify/core/dist/PNotify.js"></script>
+    <link href="~/lib/pnotify/core/dist/PNotify.css"
+          rel="stylesheet"
+    type="text/css" />
+    <script>
+
+        if (currentUserName != null) {
+
+        const myStack = new PNotify.Stack({
+            dir1: 'up',
+            dir2: 'left',
+            firstpos1: 25,
+            firstpos2: 25
+        });
+
+            var connectionSimple = new signalR.HubConnectionBuilder().withUrl("/MailHub?userName=" + currentUserName + "&onlyNew=true").build();
+
+            connectionSimple.on("ReceiveMessagesPopup", function (messagesJson) {
+            var messages = JSON.parse(messagesJson);
+            for (var i = 0; i < messages.length; i++) {
+                PNotify.notice({
+                    title: messages[i].Author + ': ' + messages[i].Title,
+                    text: messages[i].Body,
+                    delay: 2000,
+                    stack: myStack
+                });
+
+            }
+        });
+        connectionSimple.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+        }
+
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

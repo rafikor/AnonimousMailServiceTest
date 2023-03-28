@@ -9,6 +9,17 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@pnotify/core@5.2.0",
+      "destination": "wwwroot/lib/pnotify/core/"
     }
-  ]
+  ,
+{
+  "provider": "unpkg",
+  "library": "@pnotify/bootstrap4@5.2.0",
+  "destination": "wwwroot/lib/pnotify/bootstrap4/"
+}
+]
 }

@@ -3,7 +3,7 @@
 *@
 @{
     @ViewBag.UserName;
-    <script>var userName = '@ViewBag.UserName'</script>
+    <script>var currentUserName = '@ViewBag.UserName'</script>
 }
 <style>
     /* Style the button that is used to open and close the collapsible content */
@@ -68,13 +68,11 @@
         </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', e => {
         $('#recipientInput').autocomplete()
     }, false);
 </script>
-
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/mail.js"></script>
