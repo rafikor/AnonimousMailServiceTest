@@ -1,5 +1,4 @@
 ﻿using System.Data.SqlClient;
-using System.Data;
 using AnonimousMailServiceTest.Models;
 using System.Runtime.Intrinsics.Arm;
 
@@ -16,7 +15,7 @@ namespace AnonimousMailServiceTest
 
         public List<Message> GetMessages(string userName)
         {
-            var query = $"SELECT Id, Author, Recipient, Title, Body, TimeSent FROM Message WHERE Recipient ={userName} ORDER BY TimeSent";
+            var query = $"SELECT Id, Author, Recipient, Title, Body, TimeSent FROM Message WHERE Recipient =@RecipientName ORDER BY TimeSent";
             List<Message> messages = new List<Message>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -26,6 +25,8 @@ namespace AnonimousMailServiceTest
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
+                        command.Parameters.Add("@RecipientName", System.Data.SqlDbType.NVarChar);
+                        command.Parameters["@RecipientName"].Value = userName;
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             //Didn't use DataTable.Load(reader) due to strange "Method is not implemented" error
