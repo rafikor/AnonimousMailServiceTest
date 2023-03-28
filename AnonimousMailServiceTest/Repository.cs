@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using AnonimousMailServiceTest.Models;
 using System.Runtime.Intrinsics.Arm;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace AnonimousMailServiceTest
 {
@@ -55,6 +56,49 @@ namespace AnonimousMailServiceTest
                     connection.Close();
                 }
             }
+        }
+        public List<string> GetDistinctUsers()
+        {
+            var queryAuthor = "SELECT DISTINCT Author FROM Message";
+            var queryRecipient = "SELECT DISTINCT Recipient FROM Message";
+            HashSet<string> users = new HashSet<string>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(queryAuthor, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                users.Add((string)reader["Author"]);
+                            }
+                        }
+                    }
+                    using (SqlCommand command = new SqlCommand(queryRecipient, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                users.Add((string)reader["Recipient"]);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return users.ToList();
         }
     }
 }

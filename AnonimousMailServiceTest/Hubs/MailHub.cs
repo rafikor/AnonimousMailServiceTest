@@ -29,7 +29,8 @@ namespace AnonimousMailServiceTest.Hubs
             List<Message> messagesToSend = productRepository.GetMessages(userName);
             var resultToReturn = base.OnConnectedAsync();
             SendMessages(messagesToSend, userName);
-            SendPossibleRecipients(userName,new List<string>() { "AAA","BBB"});
+            List<string> distinctUsers = productRepository.GetDistinctUsers();
+            SendPossibleRecipients(userName, distinctUsers);
             return resultToReturn;
         }
 
