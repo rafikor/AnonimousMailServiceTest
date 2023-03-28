@@ -7,11 +7,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/MailHub?userName="
 document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessages", function (messagesJson) {
-    console.log(messagesJson);
     var messages = JSON.parse(messagesJson);
-    console.log(messages);
-    console.log(messages[0].Title);
-    console.log(messages[0].TimeSent);
     
     for (var i = 0; i < messages.length; i++) {
         var buttonAsHeader = document.createElement("button");
@@ -41,8 +37,11 @@ connection.on("ReceiveMessages", function (messagesJson) {
     }
 });
 
-connection.on("ReceiveUser", function (user) {
-    usersToChoose.push(user);
+connection.on("ReceivePossibleRecipients", function (usersJson) {
+    var users = JSON.parse(usersJson);
+    for (var i = 0; i < users.length; i++) {
+        usersToChoose.push(users[i]);
+    }
 });
 
 connection.start().then(function () {

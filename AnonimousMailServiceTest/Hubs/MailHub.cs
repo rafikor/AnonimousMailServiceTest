@@ -29,6 +29,7 @@ namespace AnonimousMailServiceTest.Hubs
             List<Message> messagesToSend = productRepository.GetMessages(userName);
             var resultToReturn = base.OnConnectedAsync();
             SendMessages(messagesToSend, userName);
+            SendPossibleRecipients(userName,new List<string>() { "AAA","BBB"});
             return resultToReturn;
         }
 
@@ -40,6 +41,11 @@ namespace AnonimousMailServiceTest.Hubs
             await Clients.Group(GetGroupNameByUserName(recipient)).SendAsync("ReceiveMessages", jsonToSend);
         }
 
+        public async Task SendPossibleRecipients(string recipientToWhomSend, List<string> possibleRecipients)
+        {
+            var jsonToSend = JsonConvert.SerializeObject(possibleRecipients);
+            await Clients.Group(GetGroupNameByUserName(recipientToWhomSend)).SendAsync("ReceivePossibleRecipients", jsonToSend);
+        }
         private string GetGroupNameByUserName(string userName)
         {
             return $"user_{userName}";
